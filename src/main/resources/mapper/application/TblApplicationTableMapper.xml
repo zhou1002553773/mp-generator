@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.seeyoui.mp.generator.application.mapper.TblApplicationTableMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.seeyoui.generator.test.application.entity.TblApplicationTable">
+        <id column="id" property="id" />
+        <result column="primary_key" property="primaryKey" />
+        <result column="application_primary_key" property="applicationPrimaryKey" />
+        <result column="schema_primary_key" property="schemaPrimaryKey" />
+        <result column="table_name" property="tableName" />
+        <result column="path" property="path" />
+        <result column="bo_name" property="boName" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, primary_key, application_primary_key, schema_primary_key, table_name, path, bo_name, update_time, create_time, remark
+    </sql>
+
+</mapper>

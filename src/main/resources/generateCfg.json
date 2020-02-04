@@ -1,0 +1,18 @@
+{
+  "author": "zyh",
+  "url": "jdbc:mysql://112.125.88.191:3306/mp_generator?useUnicode=true&useSSL=false&characterEncoding=utf8",
+  "userName": "devaccount",
+  "password": "MyNewPass4!",
+  "driverName": "com.mysql.cj.jdbc.Driver",
+  "rootPath": "com.jingsong.website",
+  "mapping": [
+    {
+      "moduleName": "application",
+      "table": [
+        "tbl_application",
+        "tbl_application_schema",
+        "tbl_application_table"
+      ]
+    }
+  ]
+}
