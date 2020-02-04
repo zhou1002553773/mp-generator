@@ -29,9 +29,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
     </#if>
 </#if>
-<#if table.convert>
-@TableName("${table.name}")
-</#if>
+
 <#if swagger2>
 @ApiModel(value="${entity}Vo对象", description="${table.comment!}")
 </#if>

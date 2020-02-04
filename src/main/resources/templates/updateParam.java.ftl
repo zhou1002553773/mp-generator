@@ -30,7 +30,6 @@ import lombok.experimental.Accessors;
     </#if>
 </#if>
 <#if table.convert>
-@TableName("${table.name}")
 </#if>
 <#if swagger2>
 @ApiModel(value="${entity}UpdateParam对象", description="${table.comment!}")

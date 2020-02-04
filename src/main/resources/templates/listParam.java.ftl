@@ -35,11 +35,11 @@ import lombok.experimental.Accessors;
 @ApiModel(value="${entity}CreateParam对象", description="${table.comment!}")
 </#if>
 <#if superEntityClass??>
-public class ${entity}CreateParam extends ${superEntityClass}<#if activeRecord><${entity}CreateParam></#if> {
+public class ${entity}ListParam extends ${superEntityClass}<#if activeRecord><${entity}ListParam></#if> {
 <#elseif activeRecord>
-public class ${entity}CreateParam extends Model<${entity}CreateParam> {
+public class ${entity}ListParam extends Model<${entity}ListParam> {
 <#else>
-public class ${entity}CreateParam implements Serializable {
+public class ${entity}ListParam implements Serializable {
 </#if>
 
     private static final long serialVersionUID = 1L;
@@ -89,6 +89,12 @@ public class ${entity}CreateParam implements Serializable {
     private ${field.propertyType} ${field.propertyName};
 </#list>
 <#------------  END 字段循环遍历  ---------->
+
+    @ApiModelProperty(value="当前页",dataType="java.lang.Integer")
+    private Integer currentPage;
+
+    @ApiModelProperty(value="页条数",dataType="java.lang.Integer")
+    private Integer pageSize;
 
 <#if !entityLombokModel>
     <#list table.fields as field>

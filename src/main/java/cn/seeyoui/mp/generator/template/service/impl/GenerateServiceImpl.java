@@ -140,6 +140,7 @@ public class GenerateServiceImpl implements GenerateService {
             //包配置
             PackageConfig pc = buildPageConfig(item.getModuleName(), moduleRootPath);
             mpg.setPackageInfo(pc);
+
             //策略配置
             List<String> tables = CollectionsUtils.getListProperty(item.getTableList(), Table::getTableName);
             String[] arr = new String[tables.size()];
@@ -191,7 +192,6 @@ public class GenerateServiceImpl implements GenerateService {
         dsc.setDriverName(driverName);
         return dsc;
     }
-
 
     /**
      * 自定义配置
@@ -263,6 +263,36 @@ public class GenerateServiceImpl implements GenerateService {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
                         + "/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "Vo" + StringPool.DOT_JAVA;
+            }
+        });
+
+        // 列表入参实体类
+        focList.add(new FileOutConfig("/templates/listParam.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                        + "/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "ListParam" + StringPool.DOT_JAVA;
+            }
+        });
+
+        // 列表出参实体类
+        focList.add(new FileOutConfig("/templates/listVo.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                        + "/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "ListVo" + StringPool.DOT_JAVA;
+            }
+        });
+
+        // 列表出参实体类
+        focList.add(new FileOutConfig("/templates/listItemVo.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                        + "/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "ListItemVo" + StringPool.DOT_JAVA;
             }
         });
 
@@ -355,6 +385,16 @@ public class GenerateServiceImpl implements GenerateService {
                     return projectPath + "/src/main/resources/application.properties";
                 }
             });
+
+            // QueryListVo
+            focList.add(new FileOutConfig("/templates/queryListVo.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/model/vo/QueryListVo" + StringPool.DOT_JAVA;
+                }
+            });
         }
         cfg.setFileOutConfigList(focList);
         return cfg;
@@ -373,7 +413,6 @@ public class GenerateServiceImpl implements GenerateService {
         pc.setParent(moduleRootPath);
         return pc;
     }
-
 
     /**
      * 配置策略
@@ -394,6 +433,11 @@ public class GenerateServiceImpl implements GenerateService {
         return strategy;
     }
 
+    /**
+     * 模板信息
+     * @param generateParam
+     * @return
+     */
     private TemplateConfig buildTemplateConfig(GenerateParam generateParam){
         TemplateConfig templateConfig = new TemplateConfig();
         templateConfig.setEntity("templates/entity.java");

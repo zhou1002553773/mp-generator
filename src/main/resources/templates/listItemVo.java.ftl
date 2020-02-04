@@ -1,4 +1,4 @@
-package ${package.Entity}.param;
+package ${package.Entity}.vo;
 
 <#list table.importPackages as pkg>
 import ${pkg};
@@ -30,16 +30,17 @@ import lombok.experimental.Accessors;
     </#if>
 </#if>
 <#if table.convert>
+
 </#if>
 <#if swagger2>
-@ApiModel(value="${entity}CreateParam对象", description="${table.comment!}")
+@ApiModel(value="${entity}ListItemVo对象", description="${table.comment!}")
 </#if>
 <#if superEntityClass??>
-public class ${entity}CreateParam extends ${superEntityClass}<#if activeRecord><${entity}CreateParam></#if> {
+public class ${entity}ListItemVo extends ${superEntityClass}<#if activeRecord><${entity}ListItemVo></#if> {
 <#elseif activeRecord>
-public class ${entity}CreateParam extends Model<${entity}CreateParam> {
+public class ${entity}ListItemVo extends Model<${entity}ListItemVo> {
 <#else>
-public class ${entity}CreateParam implements Serializable {
+public class ${entity}ListItemVo implements Serializable {
 </#if>
 
     private static final long serialVersionUID = 1L;

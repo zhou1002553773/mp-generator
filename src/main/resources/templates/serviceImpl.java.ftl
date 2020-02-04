@@ -3,7 +3,9 @@ package ${package.ServiceImpl};
 import ${package.Entity}.${entity};
 import ${package.Entity}.param.${entity}CreateParam;
 import ${package.Entity}.param.${entity}UpdateParam;
+import ${package.Entity}.param.${entity}ListParam;
 import ${package.Entity}.vo.${entity}Vo;
+import ${package.Entity}.vo.${entity}ListVo;
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
@@ -51,6 +53,11 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      @Override
      public ${entity}Vo detail(String primaryKey){
           return null;
+     }
+
+     @Override
+     public ${entity}ListVo list(${entity}ListParam param){
+        return null;
      }
 }
 </#if>
