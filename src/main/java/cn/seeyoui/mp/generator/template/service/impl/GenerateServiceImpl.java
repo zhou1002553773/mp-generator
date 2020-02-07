@@ -145,7 +145,7 @@ public class GenerateServiceImpl implements GenerateService {
             List<String> tables = CollectionsUtils.getListProperty(item.getTableList(), Table::getTableName);
             String[] arr = new String[tables.size()];
             tables.toArray(arr);
-            StrategyConfig sc = buildStrategy(arr);
+            StrategyConfig sc = buildStrategy(moduleRootPath,arr);
             mpg.setStrategy(sc);
             mpg.execute();
         }
@@ -395,6 +395,26 @@ public class GenerateServiceImpl implements GenerateService {
                             + "/common/model/vo/QueryListVo" + StringPool.DOT_JAVA;
                 }
             });
+
+            // BaseResponseVo
+            focList.add(new FileOutConfig("/templates/baseResponseVo.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/model/vo/BaseResponseVo" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // BaseController
+            focList.add(new FileOutConfig("/templates/baseController.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/model/controller/BaseController" + StringPool.DOT_JAVA;
+                }
+            });
         }
         cfg.setFileOutConfigList(focList);
         return cfg;
@@ -420,7 +440,7 @@ public class GenerateServiceImpl implements GenerateService {
      * @param table
      * @return
      */
-    private StrategyConfig buildStrategy(String... table) {
+    private StrategyConfig buildStrategy(String packageRootPath,String... table) {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         strategy.setInclude(table);
@@ -430,6 +450,7 @@ public class GenerateServiceImpl implements GenerateService {
         strategy.setEntityColumnConstant(Boolean.FALSE);
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategy.setSuperControllerClass(packageRootPath + ".common.model.controller.BaseController");
         return strategy;
     }
 
@@ -443,6 +464,7 @@ public class GenerateServiceImpl implements GenerateService {
         templateConfig.setEntity("templates/entity.java");
         templateConfig.setService("templates/service.java");
         templateConfig.setServiceImpl("templates/serviceImpl.java");
+        templateConfig.setController("templates/controller.java");
         templateConfig.setXml(null);
         return templateConfig;
     }
