@@ -3,7 +3,7 @@
 <mapper namespace="cn.seeyoui.mp.generator.application.mapper.TblApplicationMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.seeyoui.generator.test.application.entity.TblApplication">
+    <resultMap id="BaseResultMap" type="cn.seeyoui.mp.generator.application.entity.TblApplication">
         <id column="id" property="id" />
         <result column="primary_key" property="primaryKey" />
         <result column="application_name" property="applicationName" />
