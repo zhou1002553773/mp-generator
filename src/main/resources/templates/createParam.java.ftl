@@ -45,6 +45,7 @@ public class ${entity}CreateParam implements Serializable {
     private static final long serialVersionUID = 1L;
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
+    <#if field.propertyName !="id" && field.propertyName !="primaryKey" && field.propertyName !="createUser" && field.propertyName !="createTime" && field.propertyName !="updateTime" && field.propertyName !="updateUser" && field.propertyName !="status">
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
@@ -87,6 +88,7 @@ public class ${entity}CreateParam implements Serializable {
     @TableLogic
     </#if>
     private ${field.propertyType} ${field.propertyName};
+    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 
