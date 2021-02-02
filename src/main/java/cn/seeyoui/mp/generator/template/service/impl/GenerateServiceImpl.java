@@ -14,6 +14,7 @@ import cn.seeyoui.mp.generator.template.service.GenerateService;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -94,8 +95,8 @@ public class GenerateServiceImpl implements GenerateService {
                     list-> schema.setTableList(list.stream().map(
                             table->{
                                 Table t = new Table();
-                                t.setPath(table.getPath());
                                 t.setTableName(table.getTableName());
+                                t.setTablePrefix(table.getTablePrefix());
                                 return t;
                             }
                     ).collect(Collectors.toList())));
@@ -143,9 +144,9 @@ public class GenerateServiceImpl implements GenerateService {
 
             //策略配置
             List<String> tables = CollectionsUtils.getListProperty(item.getTableList(), Table::getTableName);
-            String[] arr = new String[tables.size()];
-            tables.toArray(arr);
-            StrategyConfig sc = buildStrategy(moduleRootPath,arr);
+            List<String> tablePrefixs = CollectionsUtils.getListProperty(item.getTableList().stream().filter(tableItem ->
+                    StringUtils.isNotEmpty(tableItem.getTablePrefix())).collect(Collectors.toList()), Table::getTablePrefix);
+            StrategyConfig sc = buildStrategy(moduleRootPath,tables,tablePrefixs);
             mpg.setStrategy(sc);
             mpg.execute();
         }
@@ -195,9 +196,9 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * 自定义配置
-     *
+     * @param generateParam
      * @param projectPath
-     * @param moduleName
+     * @param index
      * @return
      */
     private InjectionConfig buildInjectionConfig(GenerateParam generateParam,String projectPath, String moduleName,int index) {
@@ -436,20 +437,22 @@ public class GenerateServiceImpl implements GenerateService {
 
     /**
      * 配置策略
-     *
-     * @param table
+     * @param packageRootPath
+     * @param tables
+     * @param tablePrefix
      * @return
      */
-    private StrategyConfig buildStrategy(String packageRootPath,String... table) {
+    private StrategyConfig buildStrategy(String packageRootPath,List<String> tables,List<String> tablePrefix) {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude(table);
+        strategy.setInclude(tables.toArray(new String[0]));
         strategy.setEntityLombokModel(Boolean.TRUE);
         strategy.setEntityBuilderModel(Boolean.TRUE);
         strategy.setRestControllerStyle(Boolean.TRUE);
         strategy.setEntityColumnConstant(Boolean.FALSE);
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategy.setTablePrefix(tablePrefix.toArray(new String[0]));
         strategy.setSuperControllerClass(packageRootPath + ".common.model.controller.BaseController");
         return strategy;
     }
@@ -472,4 +475,19 @@ public class GenerateServiceImpl implements GenerateService {
     private String getRelativeFilePathByPackagePath(String packagePath) {
         return packagePath.replaceAll("\\.", "/");
     }
+
+    /**
+     * 获得去除前缀的实体名
+     * @param entityName
+     * @param tablePrefix
+     * @return
+     */
+    private static String getRemovePrefixEntityName(String entityName,String tablePrefix){
+        if (StringUtils.isNotEmpty(tablePrefix) && entityName.toUpperCase().contains(tablePrefix.toUpperCase())){
+            String substring = entityName.substring(tablePrefix.length());
+            return substring.substring(0,1).toUpperCase()+substring.substring(1);
+        }
+        return entityName;
+    }
+
 }
