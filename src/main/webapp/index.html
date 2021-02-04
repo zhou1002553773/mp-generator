@@ -3,52 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>开始使用layui</title>
-    <link rel="stylesheet" href="layui/css/layui.css">
+    <title>代码生成</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
 </head>
 <body>
 
 <!-- 你的HTML代码 -->
-<div class="layui-containerss">
-    <blockquote class="layui-elem-quote">注意：下述演示中的颜色只是做一个区分作用，并非栅格内置。</blockquote>
+<div class="layui-container">
+    <table class="layui-hide" id="applicationList" lay-filter="test"></table>
 
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend>始终等比例水平排列</legend>
-    </fieldset>
-
-    <div class="layui-row">
-        <div class="layui-col-xs6">
-            <div class="grid-demo grid-demo-bg1">6/12</div>
-        </div>
-        <div class="layui-col-xs6">
-            <div class="grid-demo">6/12</div>
-        </div>
-    </div>
-    <div class="layui-row">
-        <div class="layui-col-xs3">
-            <div class="grid-demo grid-demo-bg1">3/12</div>
-        </div>
-        <div class="layui-col-xs3">
-            <div class="grid-demo">3/12</div>
-        </div>
-        <div class="layui-col-xs3">
-            <div class="grid-demo grid-demo-bg1">3/12</div>
-        </div>
-        <div class="layui-col-xs3">
-            <div class="grid-demo">3/12</div>
-        </div>
-    </div>
+    <script type="text/html" id="barApplicationList">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs" lay-event="generate">生成代码</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
 </div>
 
-<script src="layui/layui.js"></script>
-<script>
-    //一般直接写在一个js文件中
-    layui.use(['layer', 'form'], function(){
-        var layer = layui.layer
-            ,form = layui.form;
+<script src="/layui/layui.js"></script>
+<script src="js/index.js"></script>
 
-        layer.msg('Hello World');
-    });
-</script>
 </body>
 </html>
