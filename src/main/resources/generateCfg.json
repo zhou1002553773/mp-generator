@@ -1,8 +1,8 @@
 {
   "author": "zyh",
-  "url": "jdbc:mysql://112.125.88.191:3306/mp_generator?useUnicode=true&useSSL=false&characterEncoding=utf8",
-  "userName": "devaccount",
-  "password": "MyNewPass4!",
+  "url": "jdbc:mysql://127.0.0.1:3306/mp_generator?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC",
+  "userName": "root",
+  "password": "test123",
   "driverName": "com.mysql.cj.jdbc.Driver",
   "rootPath": "com.jingsong.website",
   "mapping": [

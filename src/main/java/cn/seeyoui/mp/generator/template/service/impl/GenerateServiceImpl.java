@@ -103,7 +103,11 @@ public class GenerateServiceImpl implements GenerateService {
             return schema;
         }).collect(Collectors.toList()));
 
+        String projectPath = fileTemp + "/" + generateParam.getApplicationName();
+        generateParam.setProjectPath(projectPath);
         createCode(generateParam);
+
+
         return true;
     }
 
@@ -112,7 +116,7 @@ public class GenerateServiceImpl implements GenerateService {
      *
      */
     private void createCode(GenerateParam generateParam) {
-        String projectPath = fileTemp + "/" + System.currentTimeMillis();
+        String projectPath = generateParam.getProjectPath();
         for (int i = 0; i < generateParam.getSchemaList().size(); i++) {
             Schema item = generateParam.getSchemaList().get(i);
             // 代码生成器
@@ -474,20 +478,6 @@ public class GenerateServiceImpl implements GenerateService {
 
     private String getRelativeFilePathByPackagePath(String packagePath) {
         return packagePath.replaceAll("\\.", "/");
-    }
-
-    /**
-     * 获得去除前缀的实体名
-     * @param entityName
-     * @param tablePrefix
-     * @return
-     */
-    private static String getRemovePrefixEntityName(String entityName,String tablePrefix){
-        if (StringUtils.isNotEmpty(tablePrefix) && entityName.toUpperCase().contains(tablePrefix.toUpperCase())){
-            String substring = entityName.substring(tablePrefix.length());
-            return substring.substring(0,1).toUpperCase()+substring.substring(1);
-        }
-        return entityName;
     }
 
 }
