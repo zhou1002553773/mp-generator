@@ -36,7 +36,7 @@ public class GenerateServiceImpl implements GenerateService {
     @Value("${generator.path.temp}")
     private String fileTemp;
 
-    @Value("${spring.datasource.dynamic.datasource.master.url}")
+    @Value("${datasource.url}")
     private String DATASOURCE_URL = "url";
 
     @Value("${spring.datasource.dynamic.datasource.master.password}")
@@ -82,7 +82,7 @@ public class GenerateServiceImpl implements GenerateService {
         generateParam.setArtifactId(tblApplicationPo.getArtifactId());
 
         // 数据库连接
-        generateParam.setDatasourceUrl(DATASOURCE_URL);
+        generateParam.setDatasourceUrl(String.format(DATASOURCE_URL,generateParam.getDatabaseName()));
         generateParam.setDatasourceUsername(DATASOURCE_USER_NAME);
         generateParam.setDatasourcePassword(DATASOURCE_PASSWORD);
         generateParam.setDatasourceDriverClass(DATASOURCE_DRIVER_NAME);
@@ -103,7 +103,7 @@ public class GenerateServiceImpl implements GenerateService {
             return schema;
         }).collect(Collectors.toList()));
 
-        String projectPath = fileTemp + "/" + generateParam.getApplicationName();
+        String projectPath = fileTemp + "/" + System.currentTimeMillis() + "/" + generateParam.getApplicationName();
         generateParam.setProjectPath(projectPath);
         createCode(generateParam);
 
@@ -301,6 +301,16 @@ public class GenerateServiceImpl implements GenerateService {
             }
         });
 
+        // 批量保存入参
+        focList.add(new FileOutConfig("/templates/batchCreateParam.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                        + "/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "BatchCreateParam" + StringPool.DOT_JAVA;
+            }
+        });
+
         // 只生成一遍的文件
         if(index == 0){
             // pom.xml
@@ -418,6 +428,16 @@ public class GenerateServiceImpl implements GenerateService {
                     // 自定义输入文件名称
                     return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
                             + "/common/model/controller/BaseController" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // VersionConstant
+            focList.add(new FileOutConfig("/templates/version.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/constant/VersionConstant" + StringPool.DOT_JAVA;
                 }
             });
         }

@@ -2,6 +2,7 @@ package ${package.Service};
 
 import ${package.Entity}.${entity};
 import ${package.Entity}.param.${entity}CreateParam;
+import ${package.Entity}.param.${entity}BatchCreateParam;
 import ${package.Entity}.param.${entity}UpdateParam;
 import ${package.Entity}.param.${entity}ListParam;
 import ${package.Entity}.vo.${entity}Vo;
@@ -30,5 +31,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     ${entity}Vo detail(String primaryKey);
 
     ${entity}ListVo list(${entity}ListParam param);
+
+    String batchCreate(${entity}BatchCreateParam param);
 }
 </#if>
