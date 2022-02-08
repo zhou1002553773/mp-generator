@@ -88,29 +88,26 @@ public class ${entity}ListParam implements Serializable {
     @TableLogic
     </#if>
     private ${field.propertyType} ${field.propertyName};
-
     <#if "${field.propertyName}"?contains("Key")>
+
     @ApiModelProperty(value = "${field.comment}s")
     private List<${field.propertyType}> ${field.propertyName}s;
     </#if>
-
     <#if "${field.propertyType}"?contains("BigDecimal")>
-    @ApiModelProperty(value = "${field.comment}")
-    private ${field.propertyType} le${field.propertyName?cap_first};
+
     @ApiModelProperty(value = "${field.comment}")
     private ${field.propertyType} ge${field.propertyName?cap_first};
-    </#if>
 
-    <#if "${field.propertyType}"?contains("String")>
     @ApiModelProperty(value = "${field.comment}")
-    private ${field.propertyType} like${field.propertyName?cap_first};
+    private ${field.propertyType} le${field.propertyName?cap_first};
     </#if>
-
     <#if "${field.propertyType}"?contains("Date")>
-    @ApiModelProperty(value = "${field.comment}")
-    private ${field.propertyType} le${field.propertyName?cap_first};
+
     @ApiModelProperty(value = "${field.comment}")
     private ${field.propertyType} ge${field.propertyName?cap_first};
+
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.propertyType} le${field.propertyName?cap_first};
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->

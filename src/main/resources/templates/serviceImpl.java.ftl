@@ -92,16 +92,16 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         .in(CollectionUtils.isNotEmpty(param.get${field.propertyName?cap_first}s()), ${entity}::get${field.propertyName?cap_first},param.get${field.propertyName?cap_first}s())
             </#if>
             <#if "${field.propertyType}"?contains("Date")>
-        .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
-                .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
+        .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
+                .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
             </#if>
             <#if "${field.propertyType}"?contains("BigDecimal")>
-        .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
-                .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
+        .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
+                .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
             </#if>
-            <#if "${field.propertyType}"?contains("String")>
+            <#--<#if "${field.propertyType}"?contains("String")>
         .like(param.getLike${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLike${field.propertyName?cap_first}())
-            </#if>
+            </#if>-->
         </#list>;
 
         ${entity}ListVo listVo = new ${entity}ListVo();
