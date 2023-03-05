@@ -5,6 +5,8 @@ import ${package.Entity}.param.${entity}CreateParam;
 import ${package.Entity}.param.${entity}BatchCreateParam;
 import ${package.Entity}.param.${entity}UpdateParam;
 import ${package.Entity}.param.${entity}ListParam;
+import ${package.Entity}.param.${entity}DeleteParam;
+import ${package.Entity}.param.${entity}DetailParam;
 import ${package.Entity}.vo.${entity}Vo;
 import ${package.Entity}.vo.${entity}ListVo;
 import ${superServiceClassPackage};

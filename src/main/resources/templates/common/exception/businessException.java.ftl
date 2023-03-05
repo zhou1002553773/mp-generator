@@ -1,6 +1,6 @@
 package ${cfg.packageRootPath}.common.exception;
 
-import ${cfg.packageRootPath}.common.model.base.ConstantValue;
+import ${cfg.packageRootPath}.common.model.constant.ConstantValue;
 
 public class BusinessException extends RuntimeException {
 

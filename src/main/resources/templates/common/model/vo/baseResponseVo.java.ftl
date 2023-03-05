@@ -1,4 +1,4 @@
-package com.galaxy.travelchat.common.model.vo;
+package ${cfg.packageRootPath}.common.model.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

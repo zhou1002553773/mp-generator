@@ -1,7 +1,7 @@
 package ${cfg.packageRootPath}.common.constant;
 
-import ${cfg.packageRootPath}.common.model.base.ConstantContainer;
-import ${cfg.packageRootPath}.common.model.base.ConstantValue;
+import ${cfg.packageRootPath}.common.model.constant.ConstantContainer;
+import ${cfg.packageRootPath}.common.model.constant.ConstantValue;
 
 public class CommonConstant {
 

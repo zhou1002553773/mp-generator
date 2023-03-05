@@ -1,8 +1,8 @@
 package ${package.Entity}.param;
 
-<#list table.importPackages as pkg>
-import ${pkg};
-</#list>
+import java.util.List;
+
+import java.io.Serializable;
 <#if swagger2>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

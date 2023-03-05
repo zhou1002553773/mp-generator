@@ -32,21 +32,65 @@ import lombok.experimental.Accessors;
 <#if table.convert>
 </#if>
 <#if swagger2>
-@ApiModel(value="${entity}DetailParam对象", description="${table.comment!}")
+@ApiModel(value="${entity}UpdateParam对象", description="${table.comment!}")
 </#if>
 <#if superEntityClass??>
-public class ${entity}DetailParam extends ${superEntityClass}<#if activeRecord><${entity}CreateParam></#if> {
+public class ${entity}UpdateParam extends ${superEntityClass}<#if activeRecord><${entity}UpdateParam></#if> {
 <#elseif activeRecord>
-public class ${entity}DetailParam extends Model<${entity}CreateParam> {
+public class ${entity}UpdateParam extends Model<${entity}UpdateParam> {
 <#else>
-public class ${entity}DetailParam implements Serializable {
+public class ${entity}UpdateParam implements Serializable {
 </#if>
 
     private static final long serialVersionUID = 1L;
-<#-- ----------  BEGIN 字段  ---------->
-        @ApiModelProperty(value="primaryKey",dataType="java.lang.String")
-        private String primaryKey;
-<#------------  END 字段  ---------->
+<#-- ----------  BEGIN 字段循环遍历  ---------->
+<#list table.fields as field>
+    <#if field.propertyName !="id" && field.propertyName !="createUser" && field.propertyName !="createTime" && field.propertyName !="updateTime" && field.propertyName !="updateUser" && field.propertyName !="status">
+    <#if field.keyFlag>
+        <#assign keyPropertyName="${field.propertyName}"/>
+    </#if>
+
+    <#if field.comment!?length gt 0>
+    <#if swagger2>
+    @ApiModelProperty(value = "${field.comment}")
+    <#else>
+    /**
+     * ${field.comment}
+     */
+    </#if>
+    </#if>
+    <#if field.keyFlag>
+    <#-- 主键 -->
+        <#if field.keyIdentityFlag>
+    @TableId(value = "${field.name}")
+        <#elseif idType??>
+    @TableId(value = "${field.name}")
+        <#elseif field.convert>
+    @TableId("${field.name}")
+        </#if>
+    <#-- 普通字段 -->
+    <#elseif field.fill??>
+    <#-- -----   存在字段填充设置   ----->
+        <#if field.convert>
+    @TableField(value = "${field.name}", fill = FieldFill.${field.fill})
+        <#else>
+    @TableField(fill = FieldFill.${field.fill})
+        </#if>
+    <#elseif field.convert>
+    @TableField("${field.name}")
+    </#if>
+<#-- 乐观锁注解 -->
+    <#if (versionFieldName!"") == field.name>
+    @Version
+    </#if>
+<#-- 逻辑删除注解 -->
+    <#if (logicDeleteFieldName!"") == field.name>
+    @TableLogic
+    </#if>
+    private ${field.propertyType} ${field.propertyName};
+    </#if>
+</#list>
+<#------------  END 字段循环遍历  ---------->
 
 <#if !entityLombokModel>
     <#list table.fields as field>

@@ -1,6 +1,6 @@
 package ${package.Controller};
 
-import com.galaxy.nba2kol2.common.constant.VersionConstant;
+import ${cfg.packageRootPath}.common.constant.VersionConstant;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 <#if restControllerStyle>
@@ -15,6 +15,8 @@ import ${superControllerClassPackage};
 import ${package.Entity}.param.${entity}CreateParam;
 import ${package.Entity}.param.${entity}UpdateParam;
 import ${package.Entity}.param.${entity}ListParam;
+import ${package.Entity}.param.${entity}DeleteParam;
+import ${package.Entity}.param.${entity}DetailParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import ${cfg.packageRootPath}.common.model.vo.BaseResponseVo;
 import ${package.Service}.${table.serviceName};
@@ -65,16 +67,16 @@ public class ${table.controllerName} {
         return markSuccess(${entity?uncap_first}Service.update(param));
     }
 
-    @GetMapping("detail")
+    @PostMapping("detail")
     @ApiOperation(value = "详情", notes = "详情")
-    public BaseResponseVo detail(String primaryKey){
-        return markSuccess(${entity?uncap_first}Service.detail(primaryKey));
+    public BaseResponseVo detail(@RequestBody ${entity}DetailParam param){
+        return markSuccess(${entity?uncap_first}Service.detail(param));
     }
 
-    @GetMapping("logicDelete")
-    @ApiOperation(value = "逻辑删除", notes = "逻辑删除")
-    public BaseResponseVo logicDelete(String primaryKey){
-        return markSuccess(${entity?uncap_first}Service.logicDelete(primaryKey));
+    @GetMapping("delete")
+    @ApiOperation(value = "删除", notes = "删除")
+    public BaseResponseVo delete(@RequestBody ${entity}DeleteParam param){
+        return markSuccess(${entity?uncap_first}Service.delete(param));
     }
 
     @PostMapping("list")

@@ -7,6 +7,7 @@ import ${pkg};
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
+import java.util.List;
 <#if entityLombokModel>
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,20 +33,19 @@ import lombok.experimental.Accessors;
 <#if table.convert>
 </#if>
 <#if swagger2>
-@ApiModel(value="${entity}UpdateParam对象", description="${table.comment!}")
+@ApiModel(value="${entity}CreateParam对象", description="${table.comment!}")
 </#if>
 <#if superEntityClass??>
-public class ${entity}UpdateParam extends ${superEntityClass}<#if activeRecord><${entity}UpdateParam></#if> {
+public class ${entity}ListParam extends ${superEntityClass}<#if activeRecord><${entity}ListParam></#if> {
 <#elseif activeRecord>
-public class ${entity}UpdateParam extends Model<${entity}UpdateParam> {
+public class ${entity}ListParam extends Model<${entity}ListParam> {
 <#else>
-public class ${entity}UpdateParam implements Serializable {
+public class ${entity}ListParam implements Serializable {
 </#if>
 
     private static final long serialVersionUID = 1L;
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
-    <#if field.propertyName !="id" && field.propertyName !="createUser" && field.propertyName !="createTime" && field.propertyName !="updateTime" && field.propertyName !="updateUser" && field.propertyName !="status">
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
@@ -59,17 +59,8 @@ public class ${entity}UpdateParam implements Serializable {
      */
     </#if>
     </#if>
-    <#if field.keyFlag>
-    <#-- 主键 -->
-        <#if field.keyIdentityFlag>
-    @TableId(value = "${field.name}", type = IdType.AUTO)
-        <#elseif idType??>
-    @TableId(value = "${field.name}", type = IdType.${idType})
-        <#elseif field.convert>
-    @TableId("${field.name}")
-        </#if>
     <#-- 普通字段 -->
-    <#elseif field.fill??>
+    <#if field.fill??>
     <#-- -----   存在字段填充设置   ----->
         <#if field.convert>
     @TableField(value = "${field.name}", fill = FieldFill.${field.fill})
@@ -88,9 +79,35 @@ public class ${entity}UpdateParam implements Serializable {
     @TableLogic
     </#if>
     private ${field.propertyType} ${field.propertyName};
+    <#if "${field.propertyName}"?contains("Key")>
+
+    @ApiModelProperty(value = "${field.comment}s")
+    private List<${field.propertyType}> ${field.propertyName}s;
+    </#if>
+    <#--<#if "${field.propertyType}"?contains("BigDecimal")>
+
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.propertyType} ge${field.propertyName?cap_first};
+
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.propertyType} le${field.propertyName?cap_first};
+    </#if>-->
+    <#if "${field.propertyType}"?contains("Date")>
+
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.propertyType} ge${field.propertyName?cap_first};
+
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.propertyType} le${field.propertyName?cap_first};
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
+
+    @ApiModelProperty(value="当前页",dataType="java.lang.Integer")
+    private Integer currentPage;
+
+    @ApiModelProperty(value="页条数",dataType="java.lang.Integer")
+    private Integer pageSize;
 
 <#if !entityLombokModel>
     <#list table.fields as field>

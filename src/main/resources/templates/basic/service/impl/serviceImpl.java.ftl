@@ -1,11 +1,14 @@
 package ${package.ServiceImpl};
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import ${package.Entity}.${entity};
 import ${package.Entity}.param.${entity}CreateParam;
 import ${package.Entity}.param.${entity}BatchCreateParam;
 import ${package.Entity}.param.${entity}UpdateParam;
 import ${package.Entity}.param.${entity}ListParam;
+import ${package.Entity}.param.${entity}DeleteParam;
+import ${package.Entity}.param.${entity}DetailParam;
 import ${package.Entity}.vo.${entity}Vo;
 import ${package.Entity}.vo.${entity}ListVo;
 import ${package.Entity}.vo.${entity}ListItemVo;
@@ -17,6 +20,7 @@ import ${cfg.packageRootPath}.common.context.SystemContext;
 import ${cfg.packageRootPath}.common.exception.BusinessException;
 import ${cfg.packageRootPath}.common.utils.CopyUtils;
 import ${cfg.packageRootPath}.common.utils.UUIDUtils;
+import ${cfg.packageRootPath}.common.constant.CommonConstant;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -79,19 +83,19 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         if (param.getDelFlag()) {
             Wrapper<${entity}> wrapper = new QueryWrapper<${entity}>()
             .lambda()
-            .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKey())
-            .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKeys());
+            .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), ${entity}::getPrimaryKey, param.getPrimaryKey())
+            .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), ${entity}::getPrimaryKey, param.getPrimaryKeys());
             if (this.remove(wrapper)) {
                 return StringUtils.isNotEmpty(param.getPrimaryKey()) ? param.getPrimaryKey() : String.join(",",param.getPrimaryKeys());
             }
         } else {
-            BusinessAttachmentMap delEntity = CopyUtils.convert(param, BusinessAttachmentMap.class);
+            ${entity} delEntity = CopyUtils.convert(param, ${entity}.class);
             CopyUtils.copyUpdateParam(delEntity, SystemContext.getUserPrimaryKey());
             delEntity.setStatus(CommonConstant.SYSTEM_STATUS_LOSE_EFFECT.value());
             Wrapper<${entity}> wrapper = new QueryWrapper<${entity}>()
                 .lambda()
-                .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKey())
-                .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKeys());
+                .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), ${entity}::getPrimaryKey, param.getPrimaryKey())
+                .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), ${entity}::getPrimaryKey, param.getPrimaryKeys());
             if (this.update(delEntity, wrapper)) {
                 return StringUtils.isNotEmpty(param.getPrimaryKey()) ? param.getPrimaryKey() : String.join(",",param.getPrimaryKeys());
             }
@@ -122,10 +126,10 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
                 .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
             </#if>
-            <#if "${field.propertyType}"?contains("BigDecimal")>
+<#--            <#if "${field.propertyType}"?contains("BigDecimal")>
         .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
                 .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
-            </#if>
+            </#if>-->
             <#--<#if "${field.propertyType}"?contains("String")>
         .like(param.getLike${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLike${field.propertyName?cap_first}())
             </#if>-->

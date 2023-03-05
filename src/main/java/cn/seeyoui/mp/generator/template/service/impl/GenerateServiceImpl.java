@@ -77,7 +77,6 @@ public class GenerateServiceImpl implements GenerateService {
         generateParam.setDescription(tblApplicationPo.getDescription());
         generateParam.setDatabaseName(tblApplicationPo.getDatabaseName());
         generateParam.setPackagePath(tblApplicationPo.getPackagePath());
-        generateParam.setApplicationName(tblApplicationPo.getApplicationName());
         generateParam.setGroupId(tblApplicationPo.getGroupId());
         generateParam.setArtifactId(tblApplicationPo.getArtifactId());
 
@@ -206,12 +205,18 @@ public class GenerateServiceImpl implements GenerateService {
      * @return
      */
     private InjectionConfig buildInjectionConfig(GenerateParam generateParam,String projectPath, String moduleName,int index) {
+        String[] names = generateParam.getApplicationName().split("-");
+        StringBuffer applicationName = new StringBuffer();
+        for (int i = 0; i < names.length; i++) {
+            applicationName.append(upperCaseFirst(names[i]));
+        }
+
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
                 Map<String, Object> map = new HashMap<>();
                 map.put("springVersion", generateParam.getSpringVersion());
-                map.put("applicationName", generateParam.getApplicationName());
+                map.put("applicationName", applicationName);
                 map.put("groupId", generateParam.getGroupId());
                 map.put("artifactId", generateParam.getArtifactId());
                 map.put("version", generateParam.getVersion());
@@ -222,7 +227,7 @@ public class GenerateServiceImpl implements GenerateService {
             }
         };
         List<FileOutConfig> focList = new ArrayList<>();
-        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/mapper/mapper.xml.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
@@ -232,82 +237,102 @@ public class GenerateServiceImpl implements GenerateService {
         });
 
         // 基础实体类
-        focList.add(new FileOutConfig("/templates/baseEntity.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/bo/baseEntity.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/bo/Base" + tableInfo.getEntityName() + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/bo/Base" + tableInfo.getEntityName() + StringPool.DOT_JAVA;
             }
         });
 
         // 新增实体类
-        focList.add(new FileOutConfig("/templates/createParam.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/param/createParam.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "CreateParam" + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "CreateParam" + StringPool.DOT_JAVA;
             }
         });
 
         // 更新实体类
-        focList.add(new FileOutConfig("/templates/updateParam.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/param/updateParam.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "UpdateParam" + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "UpdateParam" + StringPool.DOT_JAVA;
             }
         });
 
         // 详情实体类
-        focList.add(new FileOutConfig("/templates/detailVo.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/vo/detailVo.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "Vo" + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "Vo" + StringPool.DOT_JAVA;
             }
         });
 
         // 列表入参实体类
-        focList.add(new FileOutConfig("/templates/listParam.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/param/listParam.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "ListParam" + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "ListParam" + StringPool.DOT_JAVA;
             }
         });
 
         // 列表出参实体类
-        focList.add(new FileOutConfig("/templates/listVo.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/vo/listVo.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "ListVo" + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "ListVo" + StringPool.DOT_JAVA;
             }
         });
 
         // 列表出参实体类
-        focList.add(new FileOutConfig("/templates/listItemVo.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/vo/listItemVo.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "ListItemVo" + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/vo/" + tableInfo.getEntityName() + "ListItemVo" + StringPool.DOT_JAVA;
             }
         });
 
         // 批量保存入参
-        focList.add(new FileOutConfig("/templates/batchCreateParam.java.ftl") {
+        focList.add(new FileOutConfig("/templates/basic/entity/param/batchCreateParam.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                        + "/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "BatchCreateParam" + StringPool.DOT_JAVA;
+                        + "/basic/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "BatchCreateParam" + StringPool.DOT_JAVA;
+            }
+        });
+
+        // 详情入参
+        focList.add(new FileOutConfig("/templates/basic/entity/param/detailParam.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                        + "/basic/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "DetailParam" + StringPool.DOT_JAVA;
+            }
+        });
+
+        // 删除入参
+        focList.add(new FileOutConfig("/templates/basic/entity/param/deleteParam.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                        + "/basic/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "DeleteParam" + StringPool.DOT_JAVA;
             }
         });
 
@@ -323,7 +348,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // SwaggerConfig.java
-            focList.add(new FileOutConfig("/templates/swaggerConfig.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/config/swaggerConfig.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -333,7 +358,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // MybatisPlusConfig.java
-            focList.add(new FileOutConfig("/templates/mybatisPlusConfig.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/config/mybatisPlusConfig.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -343,7 +368,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // CollectionsUtils.java
-            focList.add(new FileOutConfig("/templates/collectionsUtils.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/utils/collectionsUtils.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -353,7 +378,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // ClassUtils.java
-            focList.add(new FileOutConfig("/templates/classUtils.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/utils/classUtils.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -363,7 +388,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // CopyUtils.java
-            focList.add(new FileOutConfig("/templates/copyUtils.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/utils/copyUtils.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -373,7 +398,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // UUIDUtils.java
-            focList.add(new FileOutConfig("/templates/uUIDUtils.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/utils/uUIDUtils.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -388,7 +413,7 @@ public class GenerateServiceImpl implements GenerateService {
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
                     return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
-                            + "/" + generateParam.getApplicationName() + "Application" + StringPool.DOT_JAVA;
+                            + "/" + applicationName + "Application" + StringPool.DOT_JAVA;
                 }
             });
 
@@ -402,7 +427,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // QueryListVo
-            focList.add(new FileOutConfig("/templates/queryListVo.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/model/vo/queryListVo.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -412,7 +437,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // BaseResponseVo
-            focList.add(new FileOutConfig("/templates/baseResponseVo.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/model/vo/baseResponseVo.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -422,7 +447,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // BaseController
-            focList.add(new FileOutConfig("/templates/baseController.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/model/controller/baseController.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -432,7 +457,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // VersionConstant
-            focList.add(new FileOutConfig("/templates/version.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/constant/version.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -442,7 +467,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // CommonConstant
-            focList.add(new FileOutConfig("/templates/commonConstant.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/constant/commonConstant.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -452,7 +477,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // GlobalErrorCode
-            focList.add(new FileOutConfig("/templates/globalErrorCode.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/constant/globalErrorCode.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -462,7 +487,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // RedisConfig
-            focList.add(new FileOutConfig("/templates/redisConfig.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/config/redisConfig.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -472,7 +497,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // SystemContext
-            focList.add(new FileOutConfig("/templates/systemContext.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/context/systemContext.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -482,7 +507,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // BusinessException
-            focList.add(new FileOutConfig("/templates/businessException.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/exception/businessException.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -492,7 +517,7 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // GalaxyExceptionHandler
-            focList.add(new FileOutConfig("/templates/galaxyExceptionHandler.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/handler/galaxyExceptionHandler.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
@@ -502,12 +527,32 @@ public class GenerateServiceImpl implements GenerateService {
             });
 
             // BasePaging
-            focList.add(new FileOutConfig("/templates/basePaging.java.ftl") {
+            focList.add(new FileOutConfig("/templates/common/model/paging/basePaging.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
                     // 自定义输入文件名称
                     return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
                             + "/common/model/paging/BasePaging" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // ConstantContainer
+            focList.add(new FileOutConfig("/templates/common/model/constant/constantContainer.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/model/constant/ConstantContainer" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // ConstantContainer
+            focList.add(new FileOutConfig("/templates/common/model/constant/ConstantValue.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/model/constant/ConstantValue" + StringPool.DOT_JAVA;
                 }
             });
         }
@@ -525,7 +570,7 @@ public class GenerateServiceImpl implements GenerateService {
     private PackageConfig buildPageConfig(String moduleName, String moduleRootPath) {
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(moduleName);
-        pc.setParent(moduleRootPath);
+        pc.setParent(moduleRootPath + ".basic");
         return pc;
     }
 
@@ -558,10 +603,10 @@ public class GenerateServiceImpl implements GenerateService {
      */
     private TemplateConfig buildTemplateConfig(GenerateParam generateParam){
         TemplateConfig templateConfig = new TemplateConfig();
-        templateConfig.setEntity("templates/entity.java");
-        templateConfig.setService("templates/service.java");
-        templateConfig.setServiceImpl("templates/serviceImpl.java");
-        templateConfig.setController("templates/controller.java");
+        templateConfig.setEntity("templates/basic/entity/entity.java");
+        templateConfig.setService("templates/basic/service/service.java");
+        templateConfig.setServiceImpl("templates/basic/service/impl/serviceImpl.java");
+        templateConfig.setController("templates/basic/controller/controller.java");
         templateConfig.setXml(null);
         return templateConfig;
     }
@@ -570,4 +615,9 @@ public class GenerateServiceImpl implements GenerateService {
         return packagePath.replaceAll("\\.", "/");
     }
 
+    private String upperCaseFirst(String val) {
+        char[] arr = val.toCharArray();
+        arr[0] = Character.toUpperCase(arr[0]);
+        return new String(arr);
+    }
 }

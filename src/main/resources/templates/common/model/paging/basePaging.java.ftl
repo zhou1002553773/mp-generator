@@ -1,4 +1,4 @@
-package ${cfg.packageRootPath}.common.model.pagine;
+package ${cfg.packageRootPath}.common.model.paging;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
