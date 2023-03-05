@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑应用</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+</head>
+<body>
+    <div style="width: 60%;margin: 100px auto;" class="layui-form" lay-filter="applicationForm">
+        <!--应用信息-->
+        <div id="application" class="application">
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="applicationName" required  lay-verify="required" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">GroupId</label>
+                <div class="layui-input-block">
+                    <input type="text" name="groupId" required  lay-verify="required" placeholder="请输入GroupId" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">ArtifactId</label>
+                <div class="layui-input-block">
+                    <input type="text" name="artifactId" required  lay-verify="required" placeholder="请输入ArtifactId" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">包路径</label>
+                <div class="layui-input-block">
+                    <input type="text" name="packagePath" required  lay-verify="required" placeholder="请输入包路径" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据库名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="databaseName" required  lay-verify="required" placeholder="请输入数据库名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <input type="text" name="description" lay-verify="required" placeholder="请输入描述" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <!--应用模块信息-->
+        <div id="schema" class="schema">
+            <div class="layui-form-item">
+                <label class="layui-form-label">ModuleName1</label>
+                <div class="layui-input-block">
+                    <input id="ModuleName1" type="text" required  lay-verify="required" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/layui/layui.js"></script>
+    <script src="../js/editApplication.js"></script>
+    <script src="../js/plugins/jquery-3.3.1.min.js"></script>
+
+</body>
+</html>

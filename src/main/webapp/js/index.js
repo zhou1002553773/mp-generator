@@ -1,5 +1,6 @@
-layui.use('table', function(){
+layui.use(['table','layer'], function(){
     var table = layui.table;
+    var layer = layui.layer;
 
     // 表格渲染
     table.render({
@@ -9,9 +10,8 @@ layui.use('table', function(){
         ,contentType:'application/json'
         ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
         ,cols: [[
-            {field:'id', title: 'ID', sort: true}
-            ,{field:'applicationName', title: '项目名称'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-            ,{field:'groupId', title: 'groupId', sort: true}
+            {field:'applicationName', title: '项目名称'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+            ,{field:'groupId', title: 'groupId'}
             ,{field:'artifactId', title: 'artifactId'}
             ,{field:'description', title: '描述'}
             ,{fixed: 'right', title:'操作', toolbar: '#barApplicationList'}
@@ -38,19 +38,14 @@ layui.use('table', function(){
                 layer.close(index);
                 //向服务端发送删除指令
             });
-        }else if(layEvent === 'generate'){ //编辑
+        }else if(layEvent === 'generate'){ //生成代码
             //do something
             $.get("/template/generate",{applicationPrimaryKey:data.primaryKey},function(data,status){
-                alert("数据: " + data + "\n状态: " + status);
+                layui.msg("数据: " + data + "\n状态: " + status);
             });
         } else if(layEvent === 'edit'){ //编辑
             //do something
-            console.log("ahhaha");
-            //同步更新缓存对应的值
-            obj.update({
-                username: '123'
-                ,title: 'xxx'
-            });
+            window.location.href = '/html/editApplication.html?applicationPrimaryKey='+data.primaryKey;
         }
     });
 });

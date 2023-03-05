@@ -106,7 +106,6 @@ public class GenerateServiceImpl implements GenerateService {
         generateParam.setProjectPath(projectPath);
         createCode(generateParam);
 
-
         return true;
     }
 
