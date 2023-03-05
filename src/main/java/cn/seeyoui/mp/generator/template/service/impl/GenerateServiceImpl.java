@@ -440,6 +440,76 @@ public class GenerateServiceImpl implements GenerateService {
                             + "/common/constant/VersionConstant" + StringPool.DOT_JAVA;
                 }
             });
+
+            // CommonConstant
+            focList.add(new FileOutConfig("/templates/commonConstant.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/constant/CommonConstant" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // GlobalErrorCode
+            focList.add(new FileOutConfig("/templates/globalErrorCode.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/constant/GlobalErrorCode" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // RedisConfig
+            focList.add(new FileOutConfig("/templates/redisConfig.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/config/RedisConfig" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // SystemContext
+            focList.add(new FileOutConfig("/templates/systemContext.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/context/SystemContext" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // BusinessException
+            focList.add(new FileOutConfig("/templates/businessException.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/exception/BusinessException" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // GalaxyExceptionHandler
+            focList.add(new FileOutConfig("/templates/galaxyExceptionHandler.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/handler/GalaxyExceptionHandler" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // BasePaging
+            focList.add(new FileOutConfig("/templates/basePaging.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/model/paging/BasePaging" + StringPool.DOT_JAVA;
+                }
+            });
         }
         cfg.setFileOutConfigList(focList);
         return cfg;
