@@ -12,6 +12,9 @@ import ${package.Entity}.vo.${entity}ListItemVo;
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
+import ${cfg.packageRootPath}.common.constant.GlobalErrorCode;
+import ${cfg.packageRootPath}.common.context.SystemContext;
+import ${cfg.packageRootPath}.common.exception.BusinessException;
 import ${cfg.packageRootPath}.common.utils.CopyUtils;
 import ${cfg.packageRootPath}.common.utils.UUIDUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -44,19 +47,19 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     public String create(${entity}CreateParam param){
         ${entity} entity = CopyUtils.convert(param, ${entity}.class);
-        CopyUtils.copyCreateParam(entity,"createUser");
+        CopyUtils.copyCreateParam(entity,SystemContext.getUserPrimaryKey());
 
         if(this.save(entity)){
             return entity.getPrimaryKey();
         }
 
-        throw new RuntimeException("添加失败");
+        throw new BusinessException(GlobalErrorCode.GL9990500);
     }
 
     @Override
     public String update(${entity}UpdateParam param){
         ${entity} entity = CopyUtils.convert(param, ${entity}.class);
-        CopyUtils.copyUpdateParam(entity,"updateUser");
+        CopyUtils.copyUpdateParam(entity,SystemContext.getUserPrimaryKey());
         UpdateWrapper<${entity}> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("primary_key",entity.getPrimaryKey());
 
@@ -64,22 +67,46 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
             return entity.getPrimaryKey();
         }
 
-        throw new RuntimeException("更新失败");
+        throw new BusinessException(GlobalErrorCode.GL9990500);
     }
 
     @Override
-    public String logicDelete(String primaryKey){
-        return null;
+    public String delete(${entity}DeleteParam param){
+        if (StringUtils.isEmpty(param.getPrimaryKey()) && CollectionUtils.isEmpty(param.getPrimaryKeys())) {
+            throw new BusinessException(GlobalErrorCode.GL9990400);
+        }
+
+        if (param.getDelFlag()) {
+            Wrapper<${entity}> wrapper = new QueryWrapper<${entity}>()
+            .lambda()
+            .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKey())
+            .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKeys());
+            if (this.remove(wrapper)) {
+                return StringUtils.isNotEmpty(param.getPrimaryKey()) ? param.getPrimaryKey() : String.join(",",param.getPrimaryKeys());
+            }
+        } else {
+            BusinessAttachmentMap delEntity = CopyUtils.convert(param, BusinessAttachmentMap.class);
+            CopyUtils.copyUpdateParam(delEntity, SystemContext.getUserPrimaryKey());
+            delEntity.setStatus(CommonConstant.SYSTEM_STATUS_LOSE_EFFECT.value());
+            Wrapper<${entity}> wrapper = new QueryWrapper<${entity}>()
+                .lambda()
+                .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKey())
+                .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), BusinessAttachmentMap::getPrimaryKey, param.getPrimaryKeys());
+            if (this.update(delEntity, wrapper)) {
+                return StringUtils.isNotEmpty(param.getPrimaryKey()) ? param.getPrimaryKey() : String.join(",",param.getPrimaryKeys());
+            }
+        }
+        throw new BusinessException(GlobalErrorCode.GL9990500);
     }
 
     @Override
-    public ${entity}Vo detail(String primaryKey){
-        ${entity} entity = this.getOne(new QueryWrapper<${entity}>().eq("primary_key", primaryKey));
+    public ${entity}Vo detail(${entity}DetailParam param){
+        ${entity} entity = this.getOne(new QueryWrapper<${entity}>().eq("primary_key", param.getPrimaryKey()));
         if(entity != null){
             return CopyUtils.convert(entity,${entity}Vo.class);
         }
 
-        throw new RuntimeException("数据不存在");
+        throw new BusinessException(GlobalErrorCode.GL9990500);
     }
 
     @Override

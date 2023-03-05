@@ -26,9 +26,9 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 
     String update(${entity}UpdateParam param);
 
-    String logicDelete(String primaryKey);
+    String delete(${entity}DeleteParam param);
 
-    ${entity}Vo detail(String primaryKey);
+    ${entity}Vo detail(${entity}DetailParam param);
 
     ${entity}ListVo list(${entity}ListParam param);
 

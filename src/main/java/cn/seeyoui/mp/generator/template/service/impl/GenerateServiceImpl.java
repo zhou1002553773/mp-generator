@@ -62,7 +62,7 @@ public class GenerateServiceImpl implements GenerateService {
         TblApplication tblApplicationPo = tblApplicationService.getOne(queryWrapperApplication);
 
         QueryWrapper<TblApplicationSchema> queryWrapperSchema = new QueryWrapper<>();
-        queryWrapperSchema.eq("application_primary_key",applicationPrimaryKey);
+        queryWrapperSchema.eq("application_primary_key",applicationPrimaryKey);;
         List<TblApplicationSchema> schemaList = tblApplicationSchemaService.list(queryWrapperSchema);
 
         QueryWrapper<TblApplicationTable> queryWrapperTable = new QueryWrapper<>();

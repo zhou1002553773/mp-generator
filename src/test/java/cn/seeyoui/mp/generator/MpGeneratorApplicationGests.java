@@ -16,6 +16,6 @@ class MpGeneratorApplicationGests {
 
     @Test
     public void testGenerator(){
-        generateService.generate("nba2kol2",null,null);
+        generateService.generate("travel-chat",null,null);
     }
 }
