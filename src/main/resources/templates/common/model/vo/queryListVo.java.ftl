@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class QueryListVo<T> {
+public class QueryListVo<T> extends ResultVo {
     private Integer total = 0;
     private List<T> rows = new ArrayList();
 }

@@ -316,6 +316,16 @@ public class GenerateServiceImpl implements GenerateService {
             }
         });
 
+        // 批量更新入参
+        focList.add(new FileOutConfig("/templates/basic/entity/param/batchUpdateParam.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                        + "/basic/" + moduleName + "/entity/param/" + tableInfo.getEntityName() + "BatchUpdateParam" + StringPool.DOT_JAVA;
+            }
+        });
+
         // 详情入参
         focList.add(new FileOutConfig("/templates/basic/entity/param/detailParam.java.ftl") {
             @Override
@@ -367,7 +377,7 @@ public class GenerateServiceImpl implements GenerateService {
                 }
             });
 
-            // CollectionsUtils.java
+            // collectionsUtils.java.ftl
             focList.add(new FileOutConfig("/templates/common/utils/collectionsUtils.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
@@ -553,6 +563,16 @@ public class GenerateServiceImpl implements GenerateService {
                     // 自定义输入文件名称
                     return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
                             + "/common/model/constant/ConstantValue" + StringPool.DOT_JAVA;
+                }
+            });
+
+            // ResultVo
+            focList.add(new FileOutConfig("/templates/common/model/vo/ResultVo.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输入文件名称
+                    return projectPath + "/src/main/java/" + getRelativeFilePathByPackagePath(generateParam.getPackagePath())
+                            + "/common/model/vo/ResultVo" + StringPool.DOT_JAVA;
                 }
             });
         }

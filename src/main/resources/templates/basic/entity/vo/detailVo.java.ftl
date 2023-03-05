@@ -3,6 +3,7 @@ package ${package.Entity}.vo;
 <#list table.importPackages as pkg>
 import ${pkg};
 </#list>
+import com.galaxy.travelchat.common.model.vo.ResultVo;
 <#if swagger2>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,13 +34,8 @@ import lombok.experimental.Accessors;
 <#if swagger2>
 @ApiModel(value="${entity}Vo对象", description="${table.comment!}")
 </#if>
-<#if superEntityClass??>
-public class ${entity}Vo extends ${superEntityClass}<#if activeRecord><${entity}Vo></#if> {
-<#elseif activeRecord>
-public class ${entity}Vo extends Model<${entity}Vo> {
-<#else>
-public class ${entity}Vo implements Serializable {
-</#if>
+
+public class ${entity}Vo extends ResultVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 <#-- ----------  BEGIN 字段循环遍历  ---------->

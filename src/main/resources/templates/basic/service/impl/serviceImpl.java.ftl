@@ -3,12 +3,7 @@ package ${package.ServiceImpl};
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import ${package.Entity}.${entity};
-import ${package.Entity}.param.${entity}CreateParam;
-import ${package.Entity}.param.${entity}BatchCreateParam;
-import ${package.Entity}.param.${entity}UpdateParam;
-import ${package.Entity}.param.${entity}ListParam;
-import ${package.Entity}.param.${entity}DeleteParam;
-import ${package.Entity}.param.${entity}DetailParam;
+import ${package.Entity}.param.*;
 import ${package.Entity}.vo.${entity}Vo;
 import ${package.Entity}.vo.${entity}ListVo;
 import ${package.Entity}.vo.${entity}ListItemVo;
@@ -20,7 +15,9 @@ import ${cfg.packageRootPath}.common.context.SystemContext;
 import ${cfg.packageRootPath}.common.exception.BusinessException;
 import ${cfg.packageRootPath}.common.utils.CopyUtils;
 import ${cfg.packageRootPath}.common.utils.UUIDUtils;
+import ${cfg.packageRootPath}.common.utils.CollectionsUtils;
 import ${cfg.packageRootPath}.common.constant.CommonConstant;
+import ${cfg.packageRootPath}.common.model.vo.ResultVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -29,7 +26,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -49,33 +49,33 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
     @Override
-    public String create(${entity}CreateParam param){
+    public ResultVo create(${entity}CreateParam param){
         ${entity} entity = CopyUtils.convert(param, ${entity}.class);
         CopyUtils.copyCreateParam(entity,SystemContext.getUserPrimaryKey());
 
         if(this.save(entity)){
-            return entity.getPrimaryKey();
+            return new ResultVo(true,"保存成功",entity.getPrimaryKey());
         }
 
         throw new BusinessException(GlobalErrorCode.GL9990500);
     }
 
     @Override
-    public String update(${entity}UpdateParam param){
+    public ResultVo update(${entity}UpdateParam param){
         ${entity} entity = CopyUtils.convert(param, ${entity}.class);
         CopyUtils.copyUpdateParam(entity,SystemContext.getUserPrimaryKey());
         UpdateWrapper<${entity}> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("primary_key",entity.getPrimaryKey());
 
         if(this.update(entity,updateWrapper)){
-            return entity.getPrimaryKey();
+            return new ResultVo(true,"更新成功",entity.getPrimaryKey());
         }
 
         throw new BusinessException(GlobalErrorCode.GL9990500);
     }
 
     @Override
-    public String delete(${entity}DeleteParam param){
+    public ResultVo delete(${entity}DeleteParam param){
         if (StringUtils.isEmpty(param.getPrimaryKey()) && CollectionUtils.isEmpty(param.getPrimaryKeys())) {
             throw new BusinessException(GlobalErrorCode.GL9990400);
         }
@@ -86,7 +86,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
             .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), ${entity}::getPrimaryKey, param.getPrimaryKey())
             .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), ${entity}::getPrimaryKey, param.getPrimaryKeys());
             if (this.remove(wrapper)) {
-                return StringUtils.isNotEmpty(param.getPrimaryKey()) ? param.getPrimaryKey() : String.join(",",param.getPrimaryKeys());
+                return new ResultVo(true, "删除成功");
             }
         } else {
             ${entity} delEntity = CopyUtils.convert(param, ${entity}.class);
@@ -97,7 +97,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                 .eq(StringUtils.isNotEmpty(param.getPrimaryKey()), ${entity}::getPrimaryKey, param.getPrimaryKey())
                 .in(CollectionUtils.isNotEmpty(param.getPrimaryKeys()), ${entity}::getPrimaryKey, param.getPrimaryKeys());
             if (this.update(delEntity, wrapper)) {
-                return StringUtils.isNotEmpty(param.getPrimaryKey()) ? param.getPrimaryKey() : String.join(",",param.getPrimaryKeys());
+                return new ResultVo(true, "删除成功");
             }
         }
         throw new BusinessException(GlobalErrorCode.GL9990500);
@@ -107,7 +107,9 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     public ${entity}Vo detail(${entity}DetailParam param){
         ${entity} entity = this.getOne(new QueryWrapper<${entity}>().eq("primary_key", param.getPrimaryKey()));
         if(entity != null){
-            return CopyUtils.convert(entity,${entity}Vo.class);
+            ${entity}Vo vo = CopyUtils.convert(entity,${entity}Vo.class);
+            vo.setSuccessMessage("查询成功");
+            return vo;
         }
 
         throw new BusinessException(GlobalErrorCode.GL9990500);
@@ -147,26 +149,66 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
             listVo.setTotal(list.size());
         }
 
+        listVo.setSuccessMessage("查询成功");
         return listVo;
     }
 
     @Override
-    public String batchCreate(${entity}BatchCreateParam param) {
+    public ResultVo batchCreate(${entity}BatchCreateParam param) {
         List<${entity}> list = CopyUtils.convertList(param.getList(), ${entity}CreateParam.class, ${entity}.class);
 
         list.forEach(item -> {
             String primaryKey = item.getPrimaryKey();
-            CopyUtils.copyCreateParam(item,null);
+            CopyUtils.copyCreateParam(item,SystemContext.getUserPrimaryKey());
             if (StringUtils.isNotEmpty(primaryKey)){
                 item.setPrimaryKey(primaryKey);
             }
         });
 
         if (this.saveBatch(list)){
-            return "保存成功";
+            return new ResultVo(true, "保存成功", String.join(",", list.stream().map(${entity}::getPrimaryKey).collect(Collectors.toList())));
         }
 
-        throw new RuntimeException("保存失败");
+        throw new BusinessException(GlobalErrorCode.GL9990500);
+    }
+
+    @Override
+    public ResultVo batchUpdate(${entity}BatchUpdateParam param) {
+        if (CollectionUtils.isEmpty(param.getList())) {
+            return new ResultVo(true, "暂无可修改数据");
+        }
+        List<${entity}> list = CopyUtils.convertList(param.getList(), ${entity}UpdateParam.class, ${entity}.class);
+        // 批量设置更新人、更新时间
+        CopyUtils.copyBatchUpdateParam(list, SystemContext.getUserPrimaryKey());
+        // 通过primaryKey 先查询一下. 然后同id的方式更新
+        List<String> updatePrimaryKeys = CollectionsUtils.getListProperty(list, e -> e.getPrimaryKey());
+
+        // 根据primaryKey 查询
+        QueryWrapper<${entity}> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda()
+            .in(${entity}::getPrimaryKey, updatePrimaryKeys);
+        queryWrapper.select("id", "primary_key");
+
+        List<${entity}> dataList = this.list(queryWrapper);
+        if (CollectionUtils.isEmpty(dataList)) {
+            return new ResultVo(true, "修改成功");
+        }
+        // 更新数据ID
+        Map<String, Long> updateDataId = CollectionsUtils.getMapPropertyWithNull(dataList, e -> e.getPrimaryKey(), e -> e.getId());
+        // 更新数据
+        List<${entity}> updateList = new ArrayList<>();
+        for (${entity} item : list) {
+            Long id = updateDataId.get(item.getPrimaryKey());
+            if (null == id) {
+                continue;
+            }
+            item.setId(id);
+            updateList.add(item);
+        }
+        if (CollectionUtils.isNotEmpty(updateList)){
+            this.updateBatchById(updateList);
+        }
+        return new ResultVo(true, "修改成功");
     }
 }
 </#if>
