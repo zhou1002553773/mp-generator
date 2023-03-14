@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 import java.util.List;
+import ${cfg.packageRootPath}.common.model.paging.BasePaging;
 <#if entityLombokModel>
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,7 +41,7 @@ public class ${entity}ListParam extends ${superEntityClass}<#if activeRecord><${
 <#elseif activeRecord>
 public class ${entity}ListParam extends Model<${entity}ListParam> {
 <#else>
-public class ${entity}ListParam implements Serializable {
+public class ${entity}ListParam extends BasePaging implements Serializable {
 </#if>
 
     private static final long serialVersionUID = 1L;
@@ -79,8 +80,7 @@ public class ${entity}ListParam implements Serializable {
     @TableLogic
     </#if>
     private ${field.propertyType} ${field.propertyName};
-    <#if "${field.propertyName}"?contains("Key")>
-
+    <#if "${field.propertyName}"?contains("Key") || "${field.propertyName}"?contains("Id")>
     @ApiModelProperty(value = "${field.comment}s")
     private List<${field.propertyType}> ${field.propertyName}s;
     </#if>
@@ -93,21 +93,18 @@ public class ${entity}ListParam implements Serializable {
     private ${field.propertyType} le${field.propertyName?cap_first};
     </#if>-->
     <#if "${field.propertyType}"?contains("Date")>
-
     @ApiModelProperty(value = "${field.comment}")
     private ${field.propertyType} ge${field.propertyName?cap_first};
 
     @ApiModelProperty(value = "${field.comment}")
     private ${field.propertyType} le${field.propertyName?cap_first};
     </#if>
+    <#if "${field.propertyName}"?contains("status") || "${field.propertyName}"?contains("Status")>
+    @ApiModelProperty(value = "${field.comment}List")
+    private List<${field.propertyType}> ${field.propertyName}List;
+    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
-
-    @ApiModelProperty(value="当前页",dataType="java.lang.Integer")
-    private Integer currentPage;
-
-    @ApiModelProperty(value="页条数",dataType="java.lang.Integer")
-    private Integer pageSize;
 
 <#if !entityLombokModel>
     <#list table.fields as field>

@@ -121,13 +121,16 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         QueryWrapper<${entity}> queryWrapper = new QueryWrapper<>(convert);
         queryWrapper.lambda()
         <#list table.fields as field>
-            <#if "${field.propertyName}"?contains("Key")>
+            <#if "${field.propertyName}"?contains("Key") || "${field.propertyName}"?contains("Id") >
         .in(CollectionUtils.isNotEmpty(param.get${field.propertyName?cap_first}s()), ${entity}::get${field.propertyName?cap_first},param.get${field.propertyName?cap_first}s())
             </#if>
             <#if "${field.propertyType}"?contains("Date")>
         .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
-                .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
+        .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
             </#if>
+        <#if "${field.propertyName}"?contains("status")>
+        .in(CollectionUtils.isNotEmpty(param.get${field.propertyName?cap_first}List()), ${entity}::get${field.propertyName?cap_first},param.get${field.propertyName?cap_first}List())
+        </#if>
 <#--            <#if "${field.propertyType}"?contains("BigDecimal")>
         .ge(param.getGe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getGe${field.propertyName?cap_first}())
                 .le(param.getLe${field.propertyName?cap_first}() != null, ${entity}::get${field.propertyName?cap_first},param.getLe${field.propertyName?cap_first}())
