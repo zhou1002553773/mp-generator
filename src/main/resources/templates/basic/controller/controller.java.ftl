@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.*;
 <#else>
 @Api(tags = "${entity}前端控制器", value = "${entity}前端控制器")
 </#if>
-@RequestMapping(VersionConstant.VERSION_V1 + "<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
+@RequestMapping(VersionConstant.VERSION_V1 + "<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${cfg.tablePathMap[table.name]}</#if>")
 <#if kotlin>
 class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
 <#else>

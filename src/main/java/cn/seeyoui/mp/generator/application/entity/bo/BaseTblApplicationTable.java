@@ -45,6 +45,9 @@ public class BaseTblApplicationTable implements Serializable {
     @ApiModelProperty(value = "表名前缀")
     private String tablePrefix;
 
+    @ApiModelProperty(value = "path")
+    private String path;
+
     @ApiModelProperty(value = "更新日期")
     private LocalDateTime updateTime;
 

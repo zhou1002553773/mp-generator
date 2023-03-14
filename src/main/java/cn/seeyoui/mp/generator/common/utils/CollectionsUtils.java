@@ -1,11 +1,9 @@
 package cn.seeyoui.mp.generator.common.utils;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.google.common.collect.Maps;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -18,6 +16,18 @@ public class CollectionsUtils {
         Map<K, V> map = list.stream().collect(Collectors.toMap(function, Function.identity(), (key1, key2) -> key2));
         return map;
     }
+
+	/**
+	 * <p>
+	 * 过滤空,key,value都可为空
+	 * </p >
+	 */
+	public static <T, K, V> Map<K, V> getMapPropertyWithNull(Collection<T> collection, Function<T, K> kFun, Function<T, V> vFun) {
+		if (CollectionUtils.isEmpty(collection)) {
+			return Maps.newHashMap();
+		}
+		return collection.stream().filter(Objects::nonNull).collect(HashMap::new, (m, v) -> m.put(kFun.apply(v), vFun.apply(v)), HashMap::putAll);
+	}
 	
 	public static <K,V> Map<K,List<V>> getGroupProperty(List<V> list, Function<V,K> function) {
 		if (CollectionUtils.isEmpty(list)) {

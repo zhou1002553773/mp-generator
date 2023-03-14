@@ -96,6 +96,7 @@ public class GenerateServiceImpl implements GenerateService {
                                 Table t = new Table();
                                 t.setTableName(table.getTableName());
                                 t.setTablePrefix(table.getTablePrefix());
+                                t.setPath(table.getPath());
                                 return t;
                             }
                     ).collect(Collectors.toList())));
@@ -137,7 +138,8 @@ public class GenerateServiceImpl implements GenerateService {
             String moduleRootPath = generateParam.getPackagePath();
 
             // 自定义配置
-            InjectionConfig ic = buildInjectionConfig(generateParam,projectPath, item.getModuleName(),i);
+            Map<String, String> tablePathMap = CollectionsUtils.getMapPropertyWithNull(item.getTableList(), Table::getTableName, Table::getPath);
+            InjectionConfig ic = buildInjectionConfig(generateParam,projectPath, item.getModuleName(),i,tablePathMap);
             mpg.setCfg(ic);
 
             //包配置
@@ -201,9 +203,10 @@ public class GenerateServiceImpl implements GenerateService {
      * @param generateParam
      * @param projectPath
      * @param index
+     * @param tablePathMap
      * @return
      */
-    private InjectionConfig buildInjectionConfig(GenerateParam generateParam,String projectPath, String moduleName,int index) {
+    private InjectionConfig buildInjectionConfig(GenerateParam generateParam, String projectPath, String moduleName, int index, Map<String, String> tablePathMap) {
         String[] names = generateParam.getApplicationName().split("-");
         StringBuffer applicationName = new StringBuffer();
         for (int i = 0; i < names.length; i++) {
@@ -222,6 +225,7 @@ public class GenerateServiceImpl implements GenerateService {
                 map.put("packageRootPath", generateParam.getPackagePath());
                 map.put("databaseName", generateParam.getDatabaseName());
                 map.put("description", generateParam.getDescription());
+                map.put("tablePathMap", tablePathMap);
                 this.setMap(map);
             }
         };
